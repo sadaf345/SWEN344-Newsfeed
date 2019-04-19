@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <title>ESPN Newsfeed</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="script.js"></script>
+
+
+
+</head>
+
+<script>
+		"use strict";
+	  	var sport = "NHL";
+      var url = "http://www.espn.com/espn/rss/" + sport + "/news";
+
+
+      window.onload = function(){
+      		  init(url);
+      		}
+      		function init(url){
+      			$.get(url).done(function(data){loadFeed(data);});
+      		}
+
+
+      		function loadFeed(obj){
+      			var items = obj.querySelectorAll("item");
+
+      			//show the logo
+      			var image = obj.querySelector("image")
+      			var logoSrc = image.querySelector("url").firstChild.nodeValue;
+      			var logoLink = image.querySelector("link").firstChild.nodeValue;
+      			$("#logo").attr("src",logoSrc);
+
+      			var html = "";
+            var lineDup = "";
+      			for (var i=0;i<items.length;i++){
+      				var newsItem = items[i];
+      				var title = newsItem.querySelector("title").firstChild.nodeValue;
+      				console.log(items.length);
+      				var link = newsItem.querySelector("link").firstChild.nodeValue;
+      				var pubDate = newsItem.querySelector("pubDate").firstChild.nodeValue;
+
+              var titleConvert = title.replace(/'/g,'');
+
+
+              var arr = [titleConvert, pubDate, link];
+
+
+      				var line = '<div class="container"><div class="panel panel-primary"> <div class="panel-heading">  <h3>' + title + '<div style="float:right;"><span class="star glyphicon glyphicon-star-empty" onclick="addToFavorites(\'' + arr + '\')"></span></div></h3></div> <div class="panel-body"><i>' + pubDate + '</i> --  <a href="' + link +'" target="_blank">See original</a></p></div></div></div> ';
+      				html += line;
+
+
+      			}
+      			document.querySelector("#content").innerHTML = html;
+
+      		}
+
+	</script>
+
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">ESPN Newsfeed</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+
+
+
+  <div class="container" style="text-align:center;">
+    <div id="header">
+  		<img id="logo"/><h1>Sports News</h1>
+  	</div>
+
+    <br>
+
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary" id="NBA" onclick="loadNBA()">NBA</button>
+      <button type="button" class="btn btn-primary" id="NHL" onclick="loadNHL()">NHL</button>
+      <button type="button" class="btn btn-primary" id="NFL" onclick="loadNFL()">NFL</button>
+      <button type="button" class="btn btn-primary" id="favs" onclick="loadFavorites()">Favorites</button>
+
+    </div>
+  </div>
+
+  <br>
+
+  <div id="content" style="text-align:center;">
+
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+<style>
+  .star {
+    font-size: 25px;
+    color:gold;
+  }
+</style>
+
+</html>
