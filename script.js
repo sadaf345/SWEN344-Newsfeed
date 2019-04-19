@@ -1,5 +1,62 @@
 var html = "";
 
+function register() {
+  $(".btn-register").click(function() {
+    var loginArr = $('form').serializeArray();
+
+    if (loginArr[3].value != loginArr[4].value) {
+      alert("Passwords do not match!");
+    }
+    else if (loginArr[3].value == localStorage.getItem(loginArr[2].value)) {
+      alert("Account already exists!")
+    }
+    else {
+      if (typeof(Storage) !== "undefined") {
+        localStorage.setItem(loginArr[2].value, loginArr[3].value);
+        showLoginForm();
+      }
+    }
+  });
+}
+
+function login() {
+  $(".btn-login").click(function() {
+    var loginArr = $('form').serializeArray();
+    if (loginArr[1].value != localStorage.getItem(loginArr[0].value) || localStorage.getItem(loginArr[0].value) == null) {
+      alert("Incorrect username or password!")
+    }
+    else {
+      console.log(2);
+      var userNameHash = loginArr[0].value;
+      window.open("index.html?myvar="+ encodeURI(userNameHash),"_self");
+    }
+  });
+}
+
+function saveUserCount() {
+  var url = window.location.href;
+  var getUserName = url.split('=');
+  var userNameHash = getUserName[1] + "Count";
+  console.log(userNameHash);
+  var visitorCount = 0;
+  if (typeof(Storage) !== "undefined") {
+      if (localStorage.getItem(userNameHash) == null) {
+        console.log("1st time");
+        console.log(visitorCount);
+        visitorCount++;
+        localStorage.setItem(userNameHash, visitorCount);
+      }
+      else {
+        console.log("Not 1st time");
+        console.log(visitorCount);
+        var accum = parseInt(localStorage.getItem(userNameHash), 10);
+        accum++;
+        localStorage.setItem(userNameHash, accum);
+      }
+  }
+  return parseInt(localStorage.getItem(userNameHash), 10);
+
+}
 
 function loadNBA() {
   var xhttp = new XMLHttpRequest();
@@ -92,7 +149,5 @@ function loadNBA() {
     console.log(html);
 
     document.querySelector("#content").innerHTML = html;
-
-
 
   }

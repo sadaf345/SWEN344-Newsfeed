@@ -23,10 +23,14 @@
 		"use strict";
 	  	var sport = "NHL";
       var url = "http://www.espn.com/espn/rss/" + sport + "/news";
+      var userCount = 0;
 
 
       window.onload = function(){
       		  init(url);
+
+            userCount = saveUserCount();
+            document.querySelector("#userCount").innerHTML = userCount;
       		}
       		function init(url){
       			$.get(url).done(function(data){loadFeed(data);});
@@ -81,19 +85,9 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home
+            <a class="nav-link" href="#">Logout
               <span class="sr-only">(current)</span>
             </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Services</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
-          </li>
         </ul>
       </div>
     </div>
@@ -101,7 +95,9 @@
 
   <!-- Page Content -->
 
-
+  <div class="container">
+    <p> You have visited this site: <var id="userCount"> </var> times </p>
+  </div>
 
   <div class="container" style="text-align:center;">
     <div id="header">
