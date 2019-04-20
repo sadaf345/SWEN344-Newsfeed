@@ -1,4 +1,8 @@
 var html = "";
+var htmlArr = [];
+var htmlObj = {};
+
+
 
 function register() {
   $(".btn-register").click(function() {
@@ -26,35 +30,51 @@ function login() {
       alert("Incorrect username or password!")
     }
     else {
-      console.log(2);
       var userNameHash = loginArr[0].value;
       window.open("index.html?myvar="+ encodeURI(userNameHash),"_self");
     }
   });
 }
 
-function saveUserCount() {
+function logout() {
+  $("#logout").click(function() {
+    window.open("login.html","_self");
+  });
+}
+
+function savelastVisited() {
   var url = window.location.href;
   var getUserName = url.split('=');
   var userNameHash = getUserName[1] + "Count";
-  console.log(userNameHash);
-  var visitorCount = 0;
+
   if (typeof(Storage) !== "undefined") {
       if (localStorage.getItem(userNameHash) == null) {
-        console.log("1st time");
-        console.log(visitorCount);
-        visitorCount++;
-        localStorage.setItem(userNameHash, visitorCount);
+        var firstVisit = "This is your first visit to this site!"
+        var m = new Date();
+        var dateString =
+              m.getUTCFullYear() + "/" +
+              ("0" + (m.getUTCMonth()+1)).slice(-2) + "/" +
+              ("0" + m.getDate()).slice(-2) + " " +
+              ("0" + m.getHours()).slice(-2) + ":" +
+              ("0" + m.getUTCMinutes()).slice(-2) + ":" +
+              ("0" + m.getUTCSeconds()).slice(-2);
+        localStorage.setItem(userNameHash, dateString);
+        return firstVisit
       }
       else {
-        console.log("Not 1st time");
-        console.log(visitorCount);
-        var accum = parseInt(localStorage.getItem(userNameHash), 10);
-        accum++;
-        localStorage.setItem(userNameHash, accum);
+        var m = new Date();
+        var dateString =
+              m.getUTCFullYear() + "/" +
+              ("0" + (m.getUTCMonth()+1)).slice(-2) + "/" +
+              ("0" + m.getDate()).slice(-2) + " " +
+              ("0" + m.getHours()).slice(-2) + ":" +
+              ("0" + m.getUTCMinutes()).slice(-2) + ":" +
+              ("0" + m.getUTCSeconds()).slice(-2);
+
+          localStorage.setItem(userNameHash, dateString);
       }
   }
-  return parseInt(localStorage.getItem(userNameHash), 10);
+  return localStorage.getItem(userNameHash);
 
 }
 
@@ -97,22 +117,26 @@ function loadNBA() {
     }
 
   function addToFavorites(arr) {
+
     var line = "";
     var splitArray = arr.split(",");
 
-    var titleLength = splitArray.length - 4;
+
+    var titleLength = splitArray.length - 5;
     var title = "";
     for (var i = 0; i <= titleLength; i++) {
-      title += splitArray[i];
+       title += splitArray[i];
     }
-    var pubDate = splitArray[splitArray.length-3];
-    pubDate += splitArray[splitArray.length-2];
-    var link = splitArray[splitArray.length-1];
+    var pubDate = splitArray[splitArray.length-4];
+    pubDate += splitArray[splitArray.length-3];
+    var link = splitArray[splitArray.length-2];
+    var guid = splitArray[splitArray.length-1];
 
     $(".star.glyphicon").click(function() {
       $(this).toggleClass("glyphicon-star glyphicon-star-empty");
         line = '<div class="container"><div class="panel panel-primary"> <div class="panel-heading">  <h3>' + title + '<div style="float:right;"><span class="star glyphicon glyphicon-star" onclick="removeFromFavorites(\'' + arr + '\')"></span></div></h3></div>  <div class="panel-body"><i>' + pubDate + '</i> --  <a href="' + link +'" target="_blank">See original</a></p></div></div></div> ';
-        html += line;
+        htmlArr.push(line);
+        htmlObj[guid] = line;
     });
   }
 
@@ -120,6 +144,9 @@ function loadNBA() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
+          for (htmlCode in htmlObj){
+            html += htmlObj[htmlCode];
+          }
           document.querySelector("#content").innerHTML = html;
         }
       };
@@ -130,24 +157,14 @@ function loadNBA() {
   function removeFromFavorites(arr) {
     var line = "";
     var splitArray = arr.split(",");
+    var guid = splitArray[splitArray.length-1];
 
-    var titleLength = splitArray.length - 4;
-    var title = "";
-    for (var i = 0; i <= titleLength; i++) {
-      title += splitArray[i];
+    delete htmlObj[guid];
+
+    html = "";
+    for (htmlCode in htmlObj){
+      html += htmlObj[htmlCode];
     }
-    var pubDate = splitArray[splitArray.length-3];
-    pubDate += splitArray[splitArray.length-2];
-    var link = splitArray[splitArray.length-1];
-
-    line = '<div class="container"><div class="panel panel-primary"> <div class="panel-heading">  <h3>' + title + '<div style="float:right;"><span class="star glyphicon glyphicon-star" onclick="removeFromFavorites(\'' + arr + '\')"></span></div></h3></div>  <div class="panel-body"><i>' + pubDate + '</i> --  <a href="' + link +'" target="_blank">See original</a></p></div></div></div> ';
-
-    console.log(html);
-
-    html.replace(line, '');
-
-    console.log(html);
-
     document.querySelector("#content").innerHTML = html;
 
   }

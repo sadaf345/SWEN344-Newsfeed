@@ -23,14 +23,14 @@
 		"use strict";
 	  	var sport = "NHL";
       var url = "http://www.espn.com/espn/rss/" + sport + "/news";
-      var userCount = 0;
+      var lastVisited = 0;
 
 
       window.onload = function(){
       		  init(url);
-
-            userCount = saveUserCount();
-            document.querySelector("#userCount").innerHTML = userCount;
+            lastVisited = savelastVisited();
+            document.querySelector("#lastVisited").innerHTML = lastVisited;
+            logout();
       		}
       		function init(url){
       			$.get(url).done(function(data){loadFeed(data);});
@@ -51,17 +51,17 @@
       			for (var i=0;i<items.length;i++){
       				var newsItem = items[i];
       				var title = newsItem.querySelector("title").firstChild.nodeValue;
-      				console.log(items.length);
       				var link = newsItem.querySelector("link").firstChild.nodeValue;
       				var pubDate = newsItem.querySelector("pubDate").firstChild.nodeValue;
-
+              var guid = newsItem.querySelector("guid").firstChild.nodeValue;
               var titleConvert = title.replace(/'/g,'');
 
+              guid = parseInt(guid, 10);
 
-              var arr = [titleConvert, pubDate, link];
+              var arr = [titleConvert, pubDate, link, guid];
 
 
-      				var line = '<div class="container"><div class="panel panel-primary"> <div class="panel-heading">  <h3>' + title + '<div style="float:right;"><span class="star glyphicon glyphicon-star-empty" onclick="addToFavorites(\'' + arr + '\')"></span></div></h3></div> <div class="panel-body"><i>' + pubDate + '</i> --  <a href="' + link +'" target="_blank">See original</a></p></div></div></div> ';
+      				var line = '<div class="container"><div class="panel panel-primary"> <div class="panel-heading">  <h3>' + title + '<div style="float:right;"><span class="star glyphicon glyphicon-star-empty" id= ' + guid + ' onclick="addToFavorites(\'' + arr + '\')"></span></div></h3></div> <div class="panel-body"><i>' + pubDate + '</i> --  <a href="' + link +'" target="_blank">See original</a></p></div></div></div> ';
       				html += line;
 
 
@@ -85,7 +85,7 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Logout
+            <a id="logout" class="nav-link" href="#">Logout
               <span class="sr-only">(current)</span>
             </a>
         </ul>
@@ -96,7 +96,7 @@
   <!-- Page Content -->
 
   <div class="container">
-    <p> You have visited this site: <var id="userCount"> </var> times </p>
+    <p> You have last visited this site on: <var id="lastVisited"> </var></p>
   </div>
 
   <div class="container" style="text-align:center;">
