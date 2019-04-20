@@ -31,14 +31,14 @@ function login() {
     }
     else {
       var userNameHash = loginArr[0].value;
-      window.open("index.html?myvar="+ encodeURI(userNameHash),"_self");
+      window.open("index2.html?myvar="+ encodeURI(userNameHash),"_self");
     }
   });
 }
 
 function logout() {
   $("#logout").click(function() {
-    window.open("login.html","_self");
+    window.open("index.html","_self");
   });
 }
 
@@ -86,7 +86,7 @@ function loadNBA() {
         init(url);
       }
     };
-  xhttp.open("GET", "index.html", true);
+  xhttp.open("GET", "index2.html", true);
   xhttp.send();
 
   }
@@ -99,7 +99,7 @@ function loadNBA() {
           init(url);
         }
       };
-    xhttp.open("GET", "index.html", true);
+    xhttp.open("GET", "index2.html", true);
     xhttp.send();
 
     }
@@ -112,7 +112,7 @@ function loadNBA() {
             init(url);
           }
         };
-      xhttp.open("GET", "index.html", true);
+      xhttp.open("GET", "index2.html", true);
       xhttp.send();
     }
 
@@ -150,7 +150,7 @@ function loadNBA() {
           document.querySelector("#content").innerHTML = html;
         }
       };
-    xhttp.open("GET", "index.html", true);
+    xhttp.open("GET", "index2.html", true);
     xhttp.send();
   }
 
